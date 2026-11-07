@@ -1,0 +1,208 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Color tokens ──────────────────────────────────────────────────────────── */
+:root {
+  --bg: #ffffff;
+  --bg-2: #f5f5f5;
+  --border: #e5e5e5;
+  --text: #000000;
+  --text-2: #888888;
+  --text-muted: #b0b0b0;
+  --accent: #1a1a1a;
+  --success: #16a34a;
+  --error: #dc2626;
+  --warning: #d97706;
+
+  /* Header height — referenced by sticky offset calculations */
+  --header-h: 64px;
+  --announcement-h: 36px;
+}
+
+[data-theme='dark'] {
+  --bg: #0a0a0a;
+  --bg-2: #111111;
+  --border: #222222;
+  --text: #fafafa;
+  --text-2: #999999;
+  --text-muted: #555555;
+  --accent: #fafafa;
+}
+
+/* ── Base resets ────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* ── AUTOMATIC BACKGROUND-BASED TEXT CONTRAST RULE ─────────────────────────── */
+/* In admin white cards, containers, panels, and white tables, ensure text is dark (#111827) */
+[data-theme='dark'] .bg-white,
+[data-theme='dark'] .bg-\[#ffffff\],
+[data-theme='dark'] div[class*="bg-white"],
+[data-theme='dark'] section[class*="bg-white"],
+[data-theme='dark'] article[class*="bg-white"],
+.bg-white,
+.bg-\[#ffffff\] {
+  color: #111827 !important;
+}
+
+.bg-white *:not(button):not([class*="text-"]):not([class*="bg-"]):not(.badge):not(.tag),
+.bg-\[#ffffff\] *:not(button):not([class*="text-"]):not([class*="bg-"]):not(.badge):not(.tag) {
+  color: #111827;
+}
+
+/* Specific overrides for secondary/labels inside white cards */
+.bg-white .text-aurora-2,
+.bg-\[#ffffff\] .text-aurora-2,
+.bg-white [class*="text-aurora-2"],
+.bg-\[#ffffff\] [class*="text-aurora-2"] {
+  color: #475569 !important;
+}
+
+.bg-white label,
+.bg-\[#ffffff\] label {
+  color: #334155 !important;
+}
+
+.bg-white table th,
+.bg-\[#ffffff\] table th {
+  color: #111827 !important;
+}
+
+.bg-white table td,
+.bg-\[#ffffff\] table td {
+  color: #1f2937 !important;
+}
+
+/* Inputs on white cards */
+.bg-white input,
+.bg-white textarea,
+.bg-white select,
+.bg-\[#ffffff\] input,
+.bg-\[#ffffff\] textarea,
+.bg-\[#ffffff\] select {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+  border-color: #cbd5e1 !important;
+}
+
+.bg-white input::placeholder,
+.bg-white textarea::placeholder,
+.bg-\[#ffffff\] input::placeholder,
+.bg-\[#ffffff\] textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* ── Focus styles ───────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ── Reduced motion ─────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Marquee animation (announcement bar) ───────────────────────────────────── */
+.marquee-track {
+  display: flex;
+  white-space: nowrap;
+  animation: marquee 30s linear infinite;
+  will-change: transform;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* ── Image gallery scroll snap ───────────────────────────────────────────────── */
+.gallery-scroll {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.gallery-scroll > * {
+  scroll-snap-align: start;
+}
+
+/* ── Utilities ───────────────────────────────────────────────────────────────── */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .border-aurora {
+    border-color: var(--border);
+  }
+
+  .bg-aurora {
+    background-color: var(--bg);
+  }
+
+  .bg-aurora-2 {
+    background-color: var(--bg-2);
+  }
+
+  .text-aurora {
+    color: var(--text);
+  }
+
+  .text-aurora-2 {
+    color: var(--text-2);
+  }
+
+  .text-aurora-muted {
+    color: var(--text-muted);
+  }
+}
+
+/* ── Scrollbar (thin, themed) ────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-2);
+}

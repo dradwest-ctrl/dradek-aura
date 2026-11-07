@@ -1,0 +1,14 @@
+[build]
+  builder = "nixpacks"
+  buildCommand = "npx prisma generate && npx prisma migrate deploy && npm run build"
+  startCommand = "npm start"
+
+[build.environment]
+  NODE_VERSION = "20"
+  NIXPACKS_PKGS = "openssl"
+
+[deploy]
+  healthcheckPath = "/"
+  healthcheckTimeout = 120
+  restartPolicyType = "on-failure"
+  restartPolicyMaxRetries = 3

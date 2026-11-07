@@ -1,0 +1,75 @@
+// This is your Prisma schema file
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  name        String
+  slug        String      @unique
+  category    String      // "MEN" | "WOMEN"
+  description String
+  price       Float
+  salePrice   Float?
+  sku         String      @unique
+  stock       Int         @default(0)
+  images      String      @default("[]") // JSON array of image paths
+  variants    String      @default("[]") // JSON: [{label, options:[{value,stock}]}]
+  featured    Boolean     @default(false)
+  active      Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  orderItems  OrderItem[]
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  reference     String      @unique
+  customerName  String
+  phone         String
+  city          String
+  address       String
+  addressExtra  String?
+  notes         String?
+  items         OrderItem[]
+  subtotal      Float
+  shipping      Float
+  total         Float
+  paymentMethod String      @default("COD")
+  status        String      @default("PENDING")
+  // PENDING | CONFIRMED | PREPARING | SHIPPED | DELIVERED | CANCELLED
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model OrderItem {
+  id          String   @id @default(cuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String?
+  product     Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productName String   // Snapshot at order time
+  variant     String?  // e.g. "Taille: 42mm / Couleur: Noir"
+  price       Float    // Snapshot at order time — never recalculated
+  quantity    Int
+}
+
+model StoreSettings {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+}
+
+model AdminSession {
+  id        String   @id @default(cuid())
+  token     String   @unique // SHA-256 hash of the raw cookie token
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
